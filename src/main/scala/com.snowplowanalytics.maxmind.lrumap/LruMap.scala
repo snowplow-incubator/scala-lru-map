@@ -10,7 +10,7 @@
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the Apache License Version 2.0 for the specific language governing permissions and limitations there under.
  */
-package com.snowplowanalytics.maxmind.iplookups
+package com.snowplowanalytics.lrumap
 
 import cats.effect.Sync
 import java.util.{LinkedHashMap, Map}
@@ -33,7 +33,7 @@ object LruMap {
     lruMap.get(k)
 
   // initial capacity and load factor are the normal defaults for LinkedHashMap
-  def makeUnderlying[F[_]: Sync, K, V](maxSize: Int): F[ImpureLruMap[K, V]] = Sync[F].delay {
+  private def makeUnderlying[F[_]: Sync, K, V](maxSize: Int): F[ImpureLruMap[K, V]] = Sync[F].delay {
     new ImpureLruMap[K, V](maxSize, 16, 0.75f)
   }
 }
@@ -52,7 +52,7 @@ class LruMap[F[_]: Sync, K, V] private (val maxSize: Int, val underlying: Impure
   }
 }
 
-private[iplookups] class ImpureLruMap[K, V](maxSize: Int, ic: Int, lf: Float)
+private[lrumap] class ImpureLruMap[K, V](maxSize: Int, ic: Int, lf: Float)
     extends LinkedHashMap[K, V](ic, lf, true) {
   override protected def removeEldestEntry(eldest: Map.Entry[K, V]): Boolean =
     this.size() > maxSize

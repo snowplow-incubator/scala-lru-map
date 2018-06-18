@@ -29,6 +29,8 @@ class Fibonacci(lru: LruMap[IO, BigInt, BigInt]) {
 }
 
 val result = (for {
+  // When the size of the map exceeds 500 the least recently used element is
+  // removed
   lru <- LruMap.create[IO, BigInt, BigInt](500)
   fib <- IO { new Fibonacci(lru) }
   result <- fib.calc(100)
@@ -44,9 +46,8 @@ When you want to use the result in an impure environment you can use
 
 ## Note on Thread Safety
 
-Calls to `lruMap.get` and `LruMap.set` are not thread safe. Instead calls to
-lruMap should be synchronized by the user, or the same map should not be shared
-between threads.
+Calls to `lruMap.get` and `LruMap.set` are not inherently thread-safe, so
+concurrency concerns are left up to the choice of `Sync`.
 
 ## Copyright and license
 
