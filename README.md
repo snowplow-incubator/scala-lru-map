@@ -38,7 +38,7 @@ val result = (for {
 println(result)
 ```
 
-All impure methods and constructors are wrapped in [`cats.effect.IO`][cats-io].
+All impure methods and constructors are wrapped in [`cats.effect.Sync`][cats-sync].
 When you want to use the result in an impure environment you can use
 `unsafeRunSync` as shown above.
 
@@ -62,5 +62,6 @@ See the License for the specific language governing permissions and
 limitations under the License.
 
 [linkedhashmap]: https://docs.oracle.com/javase/7/docs/api/java/util/LinkedHashMap.html
+[cats-sync]: https://typelevel.org/cats-effect/typeclasses/sync.html
 
 [license]: http://www.apache.org/licenses/LICENSE-2.0
