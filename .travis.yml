@@ -1,0 +1,23 @@
+language: scala
+scala:
+- 2.11.12
+- 2.12.6
+jdk:
+- oraclejdk8
+script:
+- sbt coverage test coverageReport
+deploy:
+  skip_cleanup: true
+  provider: script
+  script: "./.travis/deploy.sh $TRAVIS_TAG"
+  on:
+    condition: '"${TRAVIS_SCALA_VERSION}" == "2.12.6"'
+    tags: true
+after_success:
+- bash <(curl -s https://codecov.io/bash)
+env:
+  global:
+  - BINTRAY_SNOWPLOW_MAVEN_USER=
+  - BINTRAY_SNOWPLOW_MAVEN_API_KEY=
+  - SONA_USER=snowplow
+  - SONA_PASS=
