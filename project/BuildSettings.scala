@@ -54,9 +54,9 @@ object BuildSettings {
     bintrayOrganization := Some("snowplow"),
     bintrayRepository := "snowplow-maven",
     pomIncludeRepository := { _ => false },
-    homepage := Some(url("https://github.com/snowplow-incubator/lru-map")),
-    scmInfo := Some(ScmInfo(url("https://github.com/snowplow-incubator/lru-map"),
-      "scm:git@github.com:snowplow-incubator/lru-map.git")),
+    homepage := Some(url("https://github.com/snowplow-incubator/scala-lru-map")),
+    scmInfo := Some(ScmInfo(url("https://github.com/snowplow-incubator/scala-lru-map"),
+      "scm:git@github.com:snowplow-incubator/scala-lru-map.git")),
     pomExtra := (
       <developers>
         <developer>
@@ -69,7 +69,7 @@ object BuildSettings {
   )
 
   lazy val docSettings = Seq(
-    gitRemoteRepo := "https://github.com/snowplow-incubator/lru-map.git",
+    gitRemoteRepo := "https://github.com/snowplow-incubator/scala-lru-map.git",
     siteSubdirName := ""
   )
 

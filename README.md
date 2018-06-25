@@ -1,9 +1,9 @@
 # Scala LruMap
 
-[![Build Status](https://api.travis-ci.org/snowplow-incubator/lru-map.svg)](https://travis-ci.org/snowplow-incubator/lru-map)
+[![Build Status](https://api.travis-ci.org/snowplow-incubator/scala-lru-map.svg)](https://travis-ci.org/snowplow-incubator/scala-lru-map)
 [![Maven Central](https://img.shields.io/maven-central/v/com.snowplowanalytics/lru-map_2.12.svg)](https://maven-badges.herokuapp.com/maven-central/com.snowplowanalytics/lru-map_2.12)
-[![codecov](https://codecov.io/gh/snowplow-incubator/lru-map/branch/master/graph/badge.svg)](https://codecov.io/gh/snowplow-incubator/lru-map)
-[![Join the chat at https://gitter.im/snowplow-incubator/lru-map](https://badges.gitter.im/snowplow-incubator/lru-map.svg)](https://gitter.im/snowplow-incubator/lru-map?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+[![codecov](https://codecov.io/gh/snowplow-incubator/scala-lru-map/branch/master/graph/badge.svg)](https://codecov.io/gh/snowplow-incubator/scala-lru-map)
+[![Join the chat at https://gitter.im/snowplow-incubator/scala-lru-map](https://badges.gitter.im/snowplow-incubator/scala-lru-map.svg)](https://gitter.im/snowplow-incubator/scala-lru-map?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 A pure least recently used hash map based on
 [`java.util.LinkedHashMap`][linkedhashmap].
