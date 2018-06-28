@@ -1,7 +1,7 @@
 # Scala LruMap
 
 [![Build Status](https://api.travis-ci.org/snowplow-incubator/scala-lru-map.svg)](https://travis-ci.org/snowplow-incubator/scala-lru-map)
-[![Maven Central](https://img.shields.io/maven-central/v/com.snowplowanalytics/lru-map_2.12.svg)](https://maven-badges.herokuapp.com/maven-central/com.snowplowanalytics/lru-map_2.12)
+[![Maven Central](https://img.shields.io/maven-central/v/com.snowplowanalytics/scala-lru-map_2.12.svg)](https://maven-badges.herokuapp.com/maven-central/com.snowplowanalytics/scala-lru-map_2.12)
 [![codecov](https://codecov.io/gh/snowplow-incubator/scala-lru-map/branch/master/graph/badge.svg)](https://codecov.io/gh/snowplow-incubator/scala-lru-map)
 [![Join the chat at https://gitter.im/snowplow-incubator/scala-lru-map](https://badges.gitter.im/snowplow-incubator/scala-lru-map.svg)](https://gitter.im/snowplow-incubator/scala-lru-map?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
