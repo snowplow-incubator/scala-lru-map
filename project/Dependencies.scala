@@ -14,7 +14,7 @@ import sbt._
 
 object Dependencies {
   val catsEffect    = "org.typelevel"      %% "cats-effect"          % "1.3.1"
-  val cats          = "org.typelevel"      %% "cats-core"            % "1.3.1"
+  val cats          = "org.typelevel"      %% "cats-core"            % "1.6.1"
   val scalaCheck    = "org.scalacheck"     %% "scalacheck"           % "1.14.0" % "test"
   val specs2        = "org.specs2"         %% "specs2-core"          % "4.0.3"  % "test"
 }
