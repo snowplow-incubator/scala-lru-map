@@ -1,3 +1,13 @@
+Version 0.3.0 (2019-07-24)
+--------------------------
+Use sbt-tpolecat (#17)
+Get rid of Sync context (#14)
+Remove "maximind" part from package (#13)
+Bump cats to 1.6.1 (#12)
+Bump cats-effect to 1.3.1 (#11)
+Bump SBT to 1.2.8 (#20)
+Switch to OpenJDK (#22)
+
 Version 0.2.0 (2018-09-07)
 --------------------------
 Bump cats and cats-effect (#9)
