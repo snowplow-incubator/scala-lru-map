@@ -1,3 +1,10 @@
+Version 0.3.0 (2019-02-05)
+--------------------------
+Get rid of Sync context (#14)
+Remove "maximind" part from package (#13)
+Bump cats to 1.6.0 (#12)
+Bump cats-effect to 1.2.0 (#11)
+
 Version 0.2.0 (2018-09-07)
 --------------------------
 Bump cats and cats-effect (#9)
