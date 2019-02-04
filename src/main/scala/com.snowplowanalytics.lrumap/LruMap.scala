@@ -12,63 +12,15 @@
  */
 package com.snowplowanalytics.lrumap
 
-import cats.effect.Sync
-import java.util.{LinkedHashMap, Map}
-import scala.collection.JavaConverters._
-
-// Based on com.twitter.util.LruMap
-// https://github.com/twitter/util/blob/develop/util-collection/src/main/scala/com/twitter/util/LruMap.scala
-
-/** Companion Object to constructor */
-object LruMap {
+/** Pure cache interface with `F` effect produced by interactions with cache */
+trait LruMap[F[_], K, V] {
+  /**
+    * Associates the key with the specified value
+    */
+  def put(key: K, value: V): F[Unit]
 
   /**
-   * Create an LruMap
-   *
-   * @param size Max size before evicting
-   */
-  def create[F[_]: Sync, K, V](size: Int): F[LruMap[F, K, V]] = Sync[F].delay {
-    new LruMap[F, K, V](makeUnderlying(size))
-  }
-
-  /* Alternative to lruMap.put */
-  def put[F[_]: Sync, K, V](lruMap: LruMap[F, K, V])(k: K, v: V): F[Unit] =
-    lruMap.put(k, v)
-
-  /* Alternative to lruMap.get */
-  def get[F[_]: Sync, K, V](lruMap: LruMap[F, K, V])(k: K): F[Option[V]] =
-    lruMap.get(k)
-
-  // initial capacity and load factor are the normal defaults for LinkedHashMap
-  private def makeUnderlying[K, V](maxSize: Int): ImpureLruMap[K, V] =
-    new ImpureLruMap[K, V](maxSize, 16, 0.75f)
-}
-
-/**
- * A pure LRU `map` backed by [[java.util.LinkedHashMap]].
- */
-class LruMap[F[_]: Sync, K, V] private (underlying: ImpureLruMap[K, V]) {
-
-  /**
-   * Associates the key with the specified value
-   */
-  def put(key: K, value: V): F[Unit] = Sync[F].delay {
-    underlying.put(key, value)
-  }
-
-  /**
-   * Returns the value associated with the key, unless the key has been evicted
-   */
-  def get(key: K): F[Option[V]] = Sync[F].delay {
-    Option(underlying.get(key))
-  }
-}
-
-/**
- * Impure LruMap which underlies the pure map
- */
-private[lrumap] class ImpureLruMap[K, V](maxSize: Int, ic: Int, lf: Float)
-    extends LinkedHashMap[K, V](ic, lf, true) {
-  override protected def removeEldestEntry(eldest: Map.Entry[K, V]): Boolean =
-    this.size() > maxSize
+    * Returns the value associated with the key, unless the key has been evicted
+    */
+  def get(key: K): F[Option[V]]
 }
