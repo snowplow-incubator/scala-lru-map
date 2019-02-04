@@ -12,41 +12,38 @@
  */
 package com.snowplowanalytics.lrumap
 
-import org.specs2.mutable.Specification
 import org.scalacheck.{Gen, Prop, Properties}
 import cats.implicits._
-import cats.syntax.either._
-import cats.syntax.option._
 import cats.effect.IO
 
 class LruMapSpecification extends Properties("LruMap") {
   property("Single put get") = Prop.forAll { (k: String, v: Int) =>
     (for {
-      lruMap <- LruMap.create[IO, String, Int](1)
-      _      <- LruMap.put(lruMap)(k, v)
-      result <- LruMap.get(lruMap)(k)
-    } yield result == Some(v)).unsafeRunSync()
+      lruMap <- CreateLruMap[IO, String, Int].create(1)
+      _      <- lruMap.put(k, v)
+      result <- lruMap.get(k)
+    } yield result.contains(v)).unsafeRunSync()
   }
 
   property("Put get empty") = Prop.forAll { (k1: String, k2: String, v: Int) =>
     (for {
-      lruMap <- LruMap.create[IO, String, Int](2)
+      lruMap <- CreateLruMap[IO, String, Int].create(2)
       _      <- lruMap.put(k1, v)
       result <- lruMap.get(k2)
-    } yield k1 == k2 ^ result == None).unsafeRunSync()
+    } yield k1 == k2 ^ result.isEmpty).unsafeRunSync()
   }
 
   property("Fill lru") = Prop.forAll(Gen.choose(0, 10000)) { size =>
     (for {
-      lruMap <- LruMap.create[IO, Int, Int](size)
+      lruMap <- CreateLruMap[IO, Int, Int].create(size)
       _      <- (0 to size).toList.traverse(n => lruMap.put(n, n))
       result <- lruMap.get(0)
-    } yield result == None).unsafeRunSync()
+    } yield result.isEmpty).unsafeRunSync()
   }
 
   property("Last put") = Prop.forAll(Gen.listOf(Gen.alphaStr)) { list =>
     (for {
-      lruMap <- LruMap.create[IO, String, String](list.length)
+      lruMap <- CreateLruMap[IO, String, String].create(list.length)
       _      <- list.traverse(w => lruMap.put(w, w))
       result <- list.traverse(w => lruMap.get(w))
     } yield result == list.map(Some(_))).unsafeRunSync()
@@ -54,11 +51,11 @@ class LruMapSpecification extends Properties("LruMap") {
 
   property("Evict lru") = Prop.forAll(Gen.choose(0, 1000)) { size =>
     (for {
-      lruMap <- LruMap.create[IO, Int, Int](size)
+      lruMap <- CreateLruMap[IO, Int, Int].create(size)
       _      <- (0 until size).reverse.toList.traverse(i => lruMap.put(i, i))
       _      <- (0 until size).toList.traverse(i => lruMap.get(i))
       _      <- lruMap.put(-1, -1) // 0 should be evicted
       result <- lruMap.get(0)
-    } yield result == None).unsafeRunSync()
+    } yield result.isEmpty).unsafeRunSync()
   }
 }
