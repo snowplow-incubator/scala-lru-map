@@ -30,22 +30,6 @@ import scoverage.ScoverageKeys._
 
 object BuildSettings {
 
-  lazy val compilerOptions = Seq(
-    "-deprecation",
-    "-encoding", "UTF-8",
-    "-feature",
-    "-language:existentials",
-    "-language:higherKinds",
-    "-language:implicitConversions",
-    "-unchecked",
-    "-Yno-adapted-args",
-    "-Ywarn-dead-code",
-    "-Ywarn-numeric-widen",
-    "-Xfuture",
-    "-Xlint",
-    "-Ypartial-unification"
-  )
-
   lazy val publishSettings = bintraySettings ++ Seq(
     publishMavenStyle := true,
     publishArtifact := true,
