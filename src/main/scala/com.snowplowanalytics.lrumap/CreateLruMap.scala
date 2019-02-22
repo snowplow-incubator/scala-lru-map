@@ -47,7 +47,10 @@ object CreateLruMap {
     def create(size: Int): Eval[LruMap[Eval, K, V]] = Eval.later(new LruMap[Eval, K, V] {
       private val underlying = makeUnderlying[K, V](size)
       def get(key: K): Eval[Option[V]] = Eval.later(Option(underlying.get(key)))
-      def put(key: K, value: V): Eval[Unit] = Eval.later(underlying.put(key, value))
+      def put(key: K, value: V): Eval[Unit] = Eval.later {
+        underlying.put(key, value)
+        ()
+      }
     })
   }
 
@@ -58,7 +61,10 @@ object CreateLruMap {
         underlying <- S.delay(makeUnderlying[K, V](size))
         result = new LruMap[F, K, V] {
           def get(key: K): F[Option[V]] = S.delay(Option(underlying.get(key)))
-          def put(key: K, value: V): F[Unit] = S.delay(underlying.put(key, value))
+          def put(key: K, value: V): F[Unit] = S.delay {
+            underlying.put(key, value)
+            ()
+          }
         }
       } yield result
   }
