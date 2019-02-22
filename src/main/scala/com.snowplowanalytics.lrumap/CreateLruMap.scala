@@ -12,7 +12,7 @@
  */
 package com.snowplowanalytics.lrumap
 
-import cats.Id
+import cats.Eval
 import cats.syntax.functor._
 import cats.effect.Sync
 
@@ -43,12 +43,12 @@ object CreateLruMap {
   // https://github.com/twitter/util/blob/develop/util-collection/src/main/scala/com/twitter/util/LruMap.scala
 
   /** Eager instance */
-  implicit def idInitCache[K, V]: CreateLruMap[Id, K, V] = new CreateLruMap[Id, K, V] {
-    def create(size: Int): Id[LruMap[Id, K, V]] = new LruMap[Id, K, V] {
+  implicit def idInitCache[K, V]: CreateLruMap[Eval, K, V] = new CreateLruMap[Eval, K, V] {
+    def create(size: Int): Eval[LruMap[Eval, K, V]] = Eval.later(new LruMap[Eval, K, V] {
       private val underlying = makeUnderlying[K, V](size)
-      def get(key: K): Id[Option[V]] = Option(underlying.get(key))
-      def put(key: K, value: V): Id[Unit] = underlying.put(key, value)
-    }
+      def get(key: K): Eval[Option[V]] = Eval.later(Option(underlying.get(key)))
+      def put(key: K, value: V): Eval[Unit] = Eval.later(underlying.put(key, value))
+    })
   }
 
   /** Referentially-transparent instance */
