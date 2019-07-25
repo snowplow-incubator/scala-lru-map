@@ -3,7 +3,7 @@ scala:
 - 2.11.12
 - 2.12.6
 jdk:
-- oraclejdk8
+- openjdk8
 script:
 - sbt coverage test coverageReport
 deploy:
