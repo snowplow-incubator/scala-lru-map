@@ -15,10 +15,10 @@ lazy val root = project
   .settings(
       organization := "com.snowplowanalytics",
       name := "scala-lru-map",
-      version := "0.3.0",
+      version := "0.4.0-SNAPSHOT",
       description := "Simple LRU Map for caching",
       scalaVersion := "2.11.12",
-      crossScalaVersions := Seq("2.11.12", "2.12.6"),
+      crossScalaVersions := Seq("2.11.12", "2.12.6", "2.13.1"),
       javacOptions := BuildSettings.javaCompilerOptions,
       libraryDependencies ++= Seq(
           Dependencies.cats,
