@@ -1,7 +1,7 @@
 Version 0.3.0 (2019-07-24)
 --------------------------
 Use sbt-tpolecat (#17)
-Get rid of Sync context (#14)
+Switch to tagless final API (#14)
 Remove "maximind" part from package (#13)
 Bump cats to 1.6.1 (#12)
 Bump cats-effect to 1.3.1 (#11)
