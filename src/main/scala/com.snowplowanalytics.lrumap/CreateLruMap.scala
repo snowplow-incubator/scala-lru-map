@@ -39,9 +39,6 @@ object CreateLruMap {
   /** Summoner */
   def apply[F[_], K, V](implicit ev: CreateLruMap[F, K, V]): CreateLruMap[F, K, V] = ev
 
-  // Based on com.twitter.util.LruMap
-  // https://github.com/twitter/util/blob/develop/util-collection/src/main/scala/com/twitter/util/LruMap.scala
-
   /** Eager instance */
   implicit def idInitCache[K, V]: CreateLruMap[Id, K, V] = new CreateLruMap[Id, K, V] {
     def create(size: Int): Id[LruMap[Id, K, V]] = new LruMap[Id, K, V] {
@@ -82,15 +79,6 @@ object CreateLruMap {
   }
 
   // initial capacity and load factor are the normal defaults for LinkedHashMap
-  private def makeUnderlying[K, V](maxSize: Int): ImpureLruMap[K, V] =
-    new ImpureLruMap[K, V](maxSize, 16, 0.75f)
-
-  /**
-    * Impure LruMap which underlies the pure map
-    */
-  private[lrumap] class ImpureLruMap[K, V](maxSize: Int, ic: Int, lf: Float)
-    extends java.util.LinkedHashMap[K, V](ic, lf, true) {
-    override protected def removeEldestEntry(eldest: java.util.Map.Entry[K, V]): Boolean =
-      this.size() > maxSize
-  }
+  private def makeUnderlying[K, V](maxSize: Int): LRUCache[K, V] =
+    new LRUCache[K, V](maxSize)
 }
