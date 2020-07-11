@@ -13,8 +13,11 @@
 import sbt._
 
 object Dependencies {
-  val catsEffect    = "org.typelevel"      %% "cats-effect"          % "1.3.1"
-  val cats          = "org.typelevel"      %% "cats-core"            % "1.6.1"
-  val scalaCheck    = "org.scalacheck"     %% "scalacheck"           % "1.14.0" % "test"
-  val specs2        = "org.specs2"         %% "specs2-core"          % "4.0.3"  % "test"
+  val scache        = "com.github.cb372"   %% "scalacache-guava"       % "0.27.0"
+  val scacheCats    = "com.github.cb372"   %% "scalacache-cats-effect" % "0.27.0"
+  val guava         = "com.google.guava"   % "guava"                   % "28.1-jre" // Used in beam enrich
+  val catsEffect    = "org.typelevel"      %% "cats-effect"            % "1.3.1"
+  val cats          = "org.typelevel"      %% "cats-core"              % "1.6.1"
+  val scalaCheck    = "org.scalacheck"     %% "scalacheck"             % "1.14.0" % "test"
+  val specs2        = "org.specs2"         %% "specs2-core"            % "4.0.3"  % "test"
 }

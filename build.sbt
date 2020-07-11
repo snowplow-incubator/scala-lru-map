@@ -13,19 +13,22 @@
 lazy val root = project
   .in(file("."))
   .settings(
-      organization := "com.snowplowanalytics",
-      name := "scala-lru-map",
-      version := "0.3.0",
-      description := "Simple LRU Map for caching",
-      scalaVersion := "2.11.12",
-      crossScalaVersions := Seq("2.11.12", "2.12.6"),
-      javacOptions := BuildSettings.javaCompilerOptions,
-      libraryDependencies ++= Seq(
-          Dependencies.cats,
-          Dependencies.catsEffect,
-          Dependencies.scalaCheck,
-          Dependencies.specs2
-      )
+    organization := "com.snowplowanalytics",
+    name := "scala-lru-map",
+    version := "0.3.0",
+    description := "Simple LRU Map for caching",
+    scalaVersion := "2.11.12",
+    crossScalaVersions := Seq("2.11.12", "2.12.6"),
+    javacOptions := BuildSettings.javaCompilerOptions,
+    libraryDependencies ++= Seq(
+      Dependencies.cats,
+      Dependencies.catsEffect,
+      Dependencies.scache,
+      Dependencies.scacheCats,
+      Dependencies.guava,
+      Dependencies.scalaCheck,
+      Dependencies.specs2
+    )
   )
   .settings(BuildSettings.publishSettings)
   .settings(BuildSettings.docSettings)

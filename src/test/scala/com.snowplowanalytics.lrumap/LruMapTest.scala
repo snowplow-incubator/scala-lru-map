@@ -12,50 +12,52 @@
  */
 package com.snowplowanalytics.lrumap
 
-import org.scalacheck.{Gen, Prop, Properties}
+import org.scalacheck.{Properties, Prop, Gen}
+import cats.Id
 import cats.implicits._
-import cats.effect.IO
 
 class LruMapSpecification extends Properties("LruMap") {
   property("Single put get") = Prop.forAll { (k: String, v: Int) =>
-    (for {
-      lruMap <- CreateLruMap[IO, String, Int].create(1)
-      _      <- lruMap.put(k, v)
-      result <- lruMap.get(k)
-    } yield result.contains(v)).unsafeRunSync()
+    val map: Id[LruMap[Id, String, Int]] = CreateLruMap[Id, String, Int].create(1)
+    val result = map.flatMap[Option[Int]](m => m.put(k, v).productR(m.get(k)))
+    (result: Option[Int]).contains(v)
   }
 
   property("Put get empty") = Prop.forAll { (k1: String, k2: String, v: Int) =>
-    (for {
-      lruMap <- CreateLruMap[IO, String, Int].create(2)
-      _      <- lruMap.put(k1, v)
-      result <- lruMap.get(k2)
-    } yield k1 == k2 ^ result.isEmpty).unsafeRunSync()
+    val map: Id[LruMap[Id, String, Int]] = CreateLruMap[Id, String, Int].create(2)
+    val result = map.flatMap[Option[Int]](m => m.put(k1, v).productR(m.get(k2)))
+    k1 == k2 ^ result.isEmpty
   }
 
-  property("Fill lru") = Prop.forAll(Gen.choose(0, 10000)) { size =>
-    (for {
-      lruMap <- CreateLruMap[IO, Int, Int].create(size)
-      _      <- (0 to size).toList.traverse(n => lruMap.put(n, n))
-      result <- lruMap.get(0)
-    } yield result.isEmpty).unsafeRunSync()
+  property("Fill lru") = Prop.forAll(Gen.choose(1, 10000)) { size =>
+    val map: Id[LruMap[Id, Int, Int]] = CreateLruMap[Id, Int, Int].create(size)
+    val result = map.flatMap[Option[Int]](m => (1 to size).toList.traverse(n => m.put(n, n)).productR(m.get(0)))
+    result.isEmpty
   }
 
-  property("Last put") = Prop.forAll(Gen.listOf(Gen.alphaStr)) { list =>
-    (for {
-      lruMap <- CreateLruMap[IO, String, String].create(list.length)
-      _      <- list.traverse(w => lruMap.put(w, w))
-      result <- list.traverse(w => lruMap.get(w))
-    } yield result == list.map(Some(_))).unsafeRunSync()
+  property("Last put") = Prop.forAll(Gen.listOf(Gen.identifier).suchThat(list => list.distinct == list)) { list =>
+    val map: Id[LruMap[Id, String, String]] = CreateLruMap[Id, String, String].create(list.length * 4)
+    val result = map
+      .flatMap[List[Option[String]]] { m =>
+        list.traverse[Id, Unit] { w => m.put(w, w) }.productR {
+          list.traverse[Id, Option[String]] { w => m.get(w) }
+        }
+      }
+
+    val res = result == list.map(x => Some(x))
+    if (!res) { println(s"list $list and result $result and len ${list.length}") }
+    res
   }
 
-  property("Evict lru") = Prop.forAll(Gen.choose(0, 1000)) { size =>
-    (for {
-      lruMap <- CreateLruMap[IO, Int, Int].create(size)
-      _      <- (0 until size).reverse.toList.traverse(i => lruMap.put(i, i))
-      _      <- (0 until size).toList.traverse(i => lruMap.get(i))
-      _      <- lruMap.put(-1, -1) // 0 should be evicted
-      result <- lruMap.get(0)
-    } yield result.isEmpty).unsafeRunSync()
+  property("Evict lru") = Prop.forAll(Gen.choose(1, 1000)) { size =>
+    val map: Id[LruMap[Id, Int, Int]] = CreateLruMap[Id, Int, Int].create(size)
+    val result = (1 until size).reverse.toList.traverse(i => map.put(i, i)).productR {
+      (1 until size).toList.traverse(i => map.get(i)).productR {
+        map.put(-1, -1).productR { // 0 should be evicted
+          map.get(0)
+        }
+      }
+    }
+    result.isEmpty
   }
 }

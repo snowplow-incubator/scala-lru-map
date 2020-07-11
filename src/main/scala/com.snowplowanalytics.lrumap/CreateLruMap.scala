@@ -12,9 +12,17 @@
  */
 package com.snowplowanalytics.lrumap
 
-import cats.{ Eval, Id }
+import cats.Id
 import cats.syntax.functor._
-import cats.effect.Sync
+import cats.effect.Async
+
+import com.google.common.cache.CacheBuilder
+
+import scalacache._
+import scalacache.guava._
+import scalacache.modes.sync
+import scalacache.CatsEffect
+
 
 /** `CreateLruMap` provides an ability to initialize the cache,
   * which effect will `F`
@@ -39,58 +47,37 @@ object CreateLruMap {
   /** Summoner */
   def apply[F[_], K, V](implicit ev: CreateLruMap[F, K, V]): CreateLruMap[F, K, V] = ev
 
-  // Based on com.twitter.util.LruMap
-  // https://github.com/twitter/util/blob/develop/util-collection/src/main/scala/com/twitter/util/LruMap.scala
-
   /** Eager instance */
   implicit def idInitCache[K, V]: CreateLruMap[Id, K, V] = new CreateLruMap[Id, K, V] {
     def create(size: Int): Id[LruMap[Id, K, V]] = new LruMap[Id, K, V] {
+      private implicit val scacheMode: Mode[Id] = sync.mode
       private val underlying = makeUnderlying[K, V](size)
-      def get(key: K): Id[Option[V]] = Option(underlying.get(key))
+      def get(key: K): Id[Option[V]] = underlying.get(key)
       def put(key: K, value: V): Id[Unit] = {
-        val _ = underlying.put(key, value)
+        val _ = underlying.put[Id](key)(value, None)
         ()
       }
     }
   }
 
-  implicit def evalInitCache[K, V]: CreateLruMap[Eval, K, V] = new CreateLruMap[Eval, K, V] {
-    def create(size: Int): Eval[LruMap[Eval, K, V]] = Eval.later(new LruMap[Eval, K, V] {
-      private val underlying = makeUnderlying[K, V](size)
-      def get(key: K): Eval[Option[V]] = Eval.later(Option(underlying.get(key)))
-      def put(key: K, value: V): Eval[Unit] = Eval.later {
-        underlying.put(key, value)
-        ()
-      }
-    })
-  }
+  /** Pure instance */
+  implicit def asyncInitCache[F[_], K, V](implicit F: Async[F]): CreateLruMap[F, K, V] = new CreateLruMap[F, K, V] {
+    private implicit val scacheMode: Mode[F] = CatsEffect.modes.async[F]
 
-
-  /** Referentially-transparent instance */
-  implicit def syncInitCache[F[_], K, V](implicit S: Sync[F]): CreateLruMap[F, K, V] = new CreateLruMap[F, K, V] {
     def create(size: Int): F[LruMap[F, K, V]] =
-      for {
-        underlying <- S.delay(makeUnderlying[K, V](size))
-        result = new LruMap[F, K, V] {
-          def get(key: K): F[Option[V]] = S.delay(Option(underlying.get(key)))
-          def put(key: K, value: V): F[Unit] = S.delay {
-            underlying.put(key, value)
-            ()
-          }
+      F.delay(makeUnderlying[K, V](size)).map { underlying =>
+        new LruMap[F, K, V] {
+          def get(key: K): F[Option[V]] =
+            underlying.get[F](key)
+
+          def put(key: K, value: V): F[Unit] =
+            underlying.put[F](key)(value, None).void
         }
-      } yield result
+      }
   }
 
   // initial capacity and load factor are the normal defaults for LinkedHashMap
-  private def makeUnderlying[K, V](maxSize: Int): ImpureLruMap[K, V] =
-    new ImpureLruMap[K, V](maxSize, 16, 0.75f)
+  private def makeUnderlying[K, V](maxSize: Int): GuavaCache[V] =
+    GuavaCache(CacheBuilder.newBuilder().maximumSize(maxSize.toLong).build[String, Entry[V]])
 
-  /**
-    * Impure LruMap which underlies the pure map
-    */
-  private[lrumap] class ImpureLruMap[K, V](maxSize: Int, ic: Int, lf: Float)
-    extends java.util.LinkedHashMap[K, V](ic, lf, true) {
-    override protected def removeEldestEntry(eldest: java.util.Map.Entry[K, V]): Boolean =
-      this.size() > maxSize
-  }
 }
