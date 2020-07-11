@@ -15,7 +15,7 @@ lazy val root = project
   .settings(
       organization := "com.snowplowanalytics",
       name := "scala-lru-map",
-      version := "0.5.0",
+      version := "0.5.0-M1",
       description := "Simple LRU Map for caching",
       scalaVersion := "2.13.2",
       crossScalaVersions := Seq("2.12.10", "2.13.1"),
