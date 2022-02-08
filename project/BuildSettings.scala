@@ -57,10 +57,7 @@ object BuildSettings {
     siteSubdirName := ""
   )
 
-  lazy val javaCompilerOptions = Seq(
-    "-source", "1.8",
-    "-target", "1.8"
-  )
+  lazy val javaCompilerOptions = Seq("-source", "11", "-target", "11")
 
   lazy val coverageSettings = Seq(
     coverageMinimum := 90
