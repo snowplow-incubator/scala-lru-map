@@ -24,8 +24,7 @@ lazy val root = project
       Dependencies.cats,
       Dependencies.catsEffect,
       Dependencies.scaffeine,
-      Dependencies.scalaCheck,
-      Dependencies.specs2
+      Dependencies.scalaCheck
     )
   )
   .settings(BuildSettings.publishSettings)
