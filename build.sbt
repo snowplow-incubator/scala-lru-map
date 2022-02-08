@@ -23,8 +23,7 @@ lazy val root = project
     libraryDependencies ++= Seq(
       Dependencies.cats,
       Dependencies.catsEffect,
-      Dependencies.scache,
-      Dependencies.scacheCats,
+      Dependencies.scaffeine,
       Dependencies.scalaCheck,
       Dependencies.specs2
     )

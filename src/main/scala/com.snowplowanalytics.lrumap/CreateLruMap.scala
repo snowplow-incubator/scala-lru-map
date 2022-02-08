@@ -13,16 +13,9 @@
 package com.snowplowanalytics.lrumap
 
 import cats.Id
-import cats.syntax.functor._
 import cats.effect.Async
-
-import com.google.common.cache.CacheBuilder
-
-import scalacache._
-import scalacache.guava._
-import scalacache.modes.sync
-import scalacache.CatsEffect
-
+import cats.syntax.functor._
+import com.github.blemale.scaffeine.Scaffeine
 
 /** `CreateLruMap` provides an ability to initialize the cache,
   * which effect will `F`
@@ -50,34 +43,31 @@ object CreateLruMap {
   /** Eager instance */
   implicit def idInitCache[K, V]: CreateLruMap[Id, K, V] = new CreateLruMap[Id, K, V] {
     def create(size: Int): Id[LruMap[Id, K, V]] = new LruMap[Id, K, V] {
-      private implicit val scacheMode: Mode[Id] = sync.mode
+
       private val underlying = makeUnderlying[K, V](size)
-      def get(key: K): Id[Option[V]] = underlying.get(key)
-      def put(key: K, value: V): Id[Unit] = {
-        val _ = underlying.put[Id](key)(value, None)
-        ()
-      }
+
+      def get(key: K): Id[Option[V]] = underlying.getIfPresent(key)
+      def put(key: K, value: V): Id[Unit] = underlying.put(key, value)
     }
   }
 
   /** Pure instance */
   implicit def asyncInitCache[F[_], K, V](implicit F: Async[F]): CreateLruMap[F, K, V] = new CreateLruMap[F, K, V] {
-    private implicit val scacheMode: Mode[F] = CatsEffect.modes.async[F]
 
     def create(size: Int): F[LruMap[F, K, V]] =
       F.delay(makeUnderlying[K, V](size)).map { underlying =>
         new LruMap[F, K, V] {
-          def get(key: K): F[Option[V]] =
-            underlying.get[F](key)
+          def get(key: K): F[Option[V]] = F.delay(underlying.getIfPresent(key))
 
-          def put(key: K, value: V): F[Unit] =
-            underlying.put[F](key)(value, None).void
+          def put(key: K, value: V): F[Unit] = F.delay(underlying.put(key, value))
         }
       }
   }
 
-  // initial capacity and load factor are the normal defaults for LinkedHashMap
-  private def makeUnderlying[K, V](maxSize: Int): GuavaCache[V] =
-    GuavaCache(CacheBuilder.newBuilder().maximumSize(maxSize.toLong).build[String, Entry[V]])
+  private def makeUnderlying[K, V](maxSize: Int) = {
+    Scaffeine()
+      .maximumSize(maxSize.toLong)
+      .build[K, V]()
+  }
 
 }

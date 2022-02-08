@@ -13,10 +13,9 @@
 import sbt._
 
 object Dependencies {
-  val scache        = "com.github.cb372"   %% "scalacache-guava"       % "0.28.0"
-  val scacheCats    = "com.github.cb372"   %% "scalacache-cats-effect" % "0.28.0"
   val catsEffect    = "org.typelevel"      %% "cats-effect"            % "2.1.3"
   val cats          = "org.typelevel"      %% "cats-core"              % "2.1.1"
+  val scaffeine     = "com.github.blemale" %% "scaffeine"              % "5.1.2"
   val scalaCheck    = "org.scalacheck"     %% "scalacheck"             % "1.14.0" % Test
   val specs2        = "org.specs2"         %% "specs2-core"            % "4.8.3"  % Test
 }

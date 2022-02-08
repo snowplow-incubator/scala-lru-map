@@ -5,7 +5,7 @@
 [![codecov](https://codecov.io/gh/snowplow-incubator/scala-lru-map/branch/master/graph/badge.svg)](https://codecov.io/gh/snowplow-incubator/scala-lru-map)
 [![Join the chat at https://gitter.im/snowplow-incubator/scala-lru-map](https://badges.gitter.im/snowplow-incubator/scala-lru-map.svg)](https://gitter.im/snowplow-incubator/scala-lru-map?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
-A pure least recently used hash map based on [`java.util.LinkedHashMap`][linkedhashmap].
+A pure least recently used map based on [`Scaffeine`][scaffeine].
 
 ## API
 
@@ -82,7 +82,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 
-[linkedhashmap]: https://docs.oracle.com/javase/7/docs/api/java/util/LinkedHashMap.html
-[cats-sync]: https://typelevel.org/cats-effect/typeclasses/sync.html
+[scaffeine]: https://github.com/blemale/scaffeine
+[cats-sync]: https://typelevel.org/cats-effect/docs/typeclasses/sync
 
 [license]: http://www.apache.org/licenses/LICENSE-2.0
