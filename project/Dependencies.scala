@@ -13,7 +13,7 @@
 import sbt._
 
 object Dependencies {
-  val catsEffect    = "org.typelevel"      %% "cats-effect"            % "2.1.3"
+  val catsEffect    = "org.typelevel"      %% "cats-effect"            % "3.3.5"
   val cats          = "org.typelevel"      %% "cats-core"              % "2.1.1"
   val scaffeine     = "com.github.blemale" %% "scaffeine"              % "5.1.2"
   val scalaCheck    = "org.scalacheck"     %% "scalacheck"             % "1.14.0" % Test
