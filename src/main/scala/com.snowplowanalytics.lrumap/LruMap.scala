@@ -14,13 +14,14 @@ package com.snowplowanalytics.lrumap
 
 /** Pure cache interface with `F` effect produced by interactions with cache */
 trait LruMap[F[_], K, V] {
+
   /**
-    * Associates the key with the specified value
-    */
+   * Associates the key with the specified value
+   */
   def put(key: K, value: V): F[Unit]
 
   /**
-    * Returns the value associated with the key, unless the key has been evicted
-    */
+   * Returns the value associated with the key, unless the key has been evicted
+   */
   def get(key: K): F[Option[V]]
 }

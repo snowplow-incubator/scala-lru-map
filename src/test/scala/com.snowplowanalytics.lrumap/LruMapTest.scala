@@ -12,7 +12,7 @@
  */
 package com.snowplowanalytics.lrumap
 
-import org.scalacheck.{Properties, Prop, Gen}
+import org.scalacheck.{Gen, Prop, Properties}
 import cats.Id
 import cats.implicits._
 
@@ -31,23 +31,27 @@ class LruMapSpecification extends Properties("LruMap") {
 
   property("Fill lru") = Prop.forAll(Gen.choose(1, 10000)) { size =>
     val map: Id[LruMap[Id, Int, Int]] = CreateLruMap[Id, Int, Int].create(size)
-    val result = map.flatMap[Option[Int]](m => (1 to size).toList.traverse(n => m.put(n, n)).productR(m.get(0)))
+    val result = map.flatMap[Option[Int]](m =>
+      (1 to size).toList.traverse(n => m.put(n, n)).productR(m.get(0))
+    )
     result.isEmpty
   }
 
-  property("Last put") = Prop.forAll(Gen.listOf(Gen.identifier).suchThat(list => list.distinct == list)) { list =>
-    val map: Id[LruMap[Id, String, String]] = CreateLruMap[Id, String, String].create(list.length * 4)
-    val result = map
-      .flatMap[List[Option[String]]] { m =>
-        list.traverse[Id, Unit] { w => m.put(w, w) }.productR {
-          list.traverse[Id, Option[String]] { w => m.get(w) }
+  property("Last put") =
+    Prop.forAll(Gen.listOf(Gen.identifier).suchThat(list => list.distinct == list)) { list =>
+      val map: Id[LruMap[Id, String, String]] =
+        CreateLruMap[Id, String, String].create(list.length * 4)
+      val result = map
+        .flatMap[List[Option[String]]] { m =>
+          list.traverse[Id, Unit](w => m.put(w, w)).productR {
+            list.traverse[Id, Option[String]](w => m.get(w))
+          }
         }
-      }
 
-    val res = result == list.map(x => Some(x))
-    if (!res) { println(s"list $list and result $result and len ${list.length}") }
-    res
-  }
+      val res = result == list.map(x => Some(x))
+      if (!res) { println(s"list $list and result $result and len ${list.length}") }
+      res
+    }
 
   property("Evict lru") = Prop.forAll(Gen.choose(1, 1000)) { size =>
     val map: Id[LruMap[Id, Int, Int]] = CreateLruMap[Id, Int, Int].create(size)

@@ -31,18 +31,21 @@ import scoverage.ScoverageKeys._
 object BuildSettings {
 
   lazy val publishSettings = bintraySettings ++ Seq(
-    publishMavenStyle := true,
-    publishArtifact := true,
+    publishMavenStyle       := true,
+    publishArtifact         := true,
     publishArtifact in Test := false,
     licenses += ("Apache-2.0", url("http://www.apache.org/licenses/LICENSE-2.0.html")),
-    bintrayOrganization := Some("snowplow"),
-    bintrayRepository := "snowplow-maven",
+    bintrayOrganization  := Some("snowplow"),
+    bintrayRepository    := "snowplow-maven",
     pomIncludeRepository := { _ => false },
-    homepage := Some(url("https://github.com/snowplow-incubator/scala-lru-map")),
-    scmInfo := Some(ScmInfo(url("https://github.com/snowplow-incubator/scala-lru-map"),
-      "scm:git@github.com:snowplow-incubator/scala-lru-map.git")),
-    pomExtra := (
-      <developers>
+    homepage             := Some(url("https://github.com/snowplow-incubator/scala-lru-map")),
+    scmInfo := Some(
+      ScmInfo(
+        url("https://github.com/snowplow-incubator/scala-lru-map"),
+        "scm:git@github.com:snowplow-incubator/scala-lru-map.git"
+      )
+    ),
+    pomExtra := (<developers>
         <developer>
           <name>Snowplow Analytics Ltd</name>
           <email>support@snowplowanalytics.com</email>
@@ -53,7 +56,7 @@ object BuildSettings {
   )
 
   lazy val docSettings = Seq(
-    gitRemoteRepo := "https://github.com/snowplow-incubator/scala-lru-map.git",
+    gitRemoteRepo  := "https://github.com/snowplow-incubator/scala-lru-map.git",
     siteSubdirName := ""
   )
 
