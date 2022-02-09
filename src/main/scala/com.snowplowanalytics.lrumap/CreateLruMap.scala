@@ -17,21 +17,23 @@ import cats.effect.Async
 import cats.syntax.functor._
 import com.github.blemale.scaffeine.Scaffeine
 
-/** `CreateLruMap` provides an ability to initialize the cache,
-  * which effect will `F`
-  *
-  * *WARNING*: Due to support of non-`Sync`/eager algebras,
-  * users should be super-careful about creating *values* of `F[_]`,
-  * as they won't have RT/lazy semantics and will be memoized
-  *
-  * This is NOT a type class, as it does not have the coherence
-  * requirement, but can be passed implicitly
-  */
+/**
+ * `CreateLruMap` provides an ability to initialize the cache, which effect will `F`
+ *
+ * *WARNING*: Due to support of non-`Sync`/eager algebras, users should be super-careful about
+ * creating *values* of `F[_]`, as they won't have RT/lazy semantics and will be memoized
+ *
+ * This is NOT a type class, as it does not have the coherence requirement, but can be passed
+ * implicitly
+ */
 trait CreateLruMap[F[_], K, V] extends Serializable {
-  /** Create an LruMap within `F` effect
-    *
-    * @param size Max size before evicting
-    */
+
+  /**
+   * Create an LruMap within `F` effect
+   *
+   * @param size
+   *   Max size before evicting
+   */
   def create(size: Int): F[LruMap[F, K, V]]
 }
 
@@ -47,22 +49,24 @@ object CreateLruMap {
       private val underlying = makeUnderlying[K, V](size)
 
       def get(key: K): Id[Option[V]] = underlying.getIfPresent(key)
+
       def put(key: K, value: V): Id[Unit] = underlying.put(key, value)
     }
   }
 
   /** Pure instance */
-  implicit def asyncInitCache[F[_], K, V](implicit F: Async[F]): CreateLruMap[F, K, V] = new CreateLruMap[F, K, V] {
+  implicit def asyncInitCache[F[_], K, V](implicit F: Async[F]): CreateLruMap[F, K, V] =
+    new CreateLruMap[F, K, V] {
 
-    def create(size: Int): F[LruMap[F, K, V]] =
-      F.delay(makeUnderlying[K, V](size)).map { underlying =>
-        new LruMap[F, K, V] {
-          def get(key: K): F[Option[V]] = F.delay(underlying.getIfPresent(key))
+      def create(size: Int): F[LruMap[F, K, V]] =
+        F.delay(makeUnderlying[K, V](size)).map { underlying =>
+          new LruMap[F, K, V] {
+            def get(key: K): F[Option[V]] = F.delay(underlying.getIfPresent(key))
 
-          def put(key: K, value: V): F[Unit] = F.delay(underlying.put(key, value))
+            def put(key: K, value: V): F[Unit] = F.delay(underlying.put(key, value))
+          }
         }
-      }
-  }
+    }
 
   private def makeUnderlying[K, V](maxSize: Int) = {
     Scaffeine()
