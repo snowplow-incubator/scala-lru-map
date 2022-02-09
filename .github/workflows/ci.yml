@@ -19,7 +19,7 @@ jobs:
         java-version: 11
 
     - name: Run tests
-      run: sbt coverage +test coverageReport
+      run: sbt coverage +test
 
     - name: Check Scala formatting
       run: sbt scalafmtCheckAll
@@ -29,3 +29,8 @@ jobs:
 
     - name: Check assets can be published
       run: sbt +publishLocal
+
+    - name: Submit coveralls data
+      run: sbt coverageReport coveralls
+      env:
+        COVERALLS_REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}

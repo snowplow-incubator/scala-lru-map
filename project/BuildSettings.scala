@@ -64,7 +64,7 @@ object BuildSettings {
   // clear `mimaBinaryIssueFilters` and `mimaPreviousVersions`.
   // Otherwise, add previous version to the set without
   // removing older versions.
-  lazy val mimaPreviousVersions = Set("0.5.0")
+  lazy val mimaPreviousVersions = Set()
   lazy val mimaSettings = Seq(
     mimaPreviousArtifacts := mimaPreviousVersions.map { organization.value %% name.value % _ },
     ThisBuild / mimaFailOnNoPrevious := false,

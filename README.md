@@ -2,7 +2,7 @@
 
 [![Build Status][ci-image]][ci]
 [![Maven Central][release-image]][releases]
-[![codecov](https://codecov.io/gh/snowplow-incubator/scala-lru-map/branch/master/graph/badge.svg)](https://codecov.io/gh/snowplow-incubator/scala-lru-map)
+[![Coverage Status][coveralls-image]][coveralls]
 [![Join the chat at https://gitter.im/snowplow-incubator/scala-lru-map][chat-image]][chat]
 
 A pure least recently used map based on [`Scaffeine`][scaffeine].
@@ -92,6 +92,9 @@ limitations under the License.
 
 [releases]: https://maven-badges.herokuapp.com/maven-central/com.snowplowanalytics/scala-lru-map_2.13
 [release-image]: https://img.shields.io/maven-central/v/com.snowplowanalytics/scala-lru-map_2.13.svg
+
+[coveralls]: https://coveralls.io/github/snowplow-incubator/scala-lru-map?branch=master
+[coveralls-image]: https://coveralls.io/repos/github/snowplow-incubator/scala-lru-map/badge.svg?branch=master
 
 [chat]: https://gitter.im/snowplow-incubator/scala-lru-map?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge
 [chat-image]: https://badges.gitter.im/snowplow-incubator/scala-lru-map.svg
