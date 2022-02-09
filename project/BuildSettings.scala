@@ -16,6 +16,9 @@ import Keys._
 // dynver plugin
 import sbtdynver.DynVerPlugin.autoImport._
 
+// Mima plugin
+import com.typesafe.tools.mima.plugin.MimaKeys._
+
 // Scoverage
 import scoverage.ScoverageKeys._
 
@@ -54,6 +57,21 @@ object BuildSettings {
     coverageFailOnMinimum    := false,
     (Test / test) := {
       (coverageReport dependsOn (Test / test)).value
+    }
+  )
+
+  // If a new version introduces breaking changes,
+  // clear `mimaBinaryIssueFilters` and `mimaPreviousVersions`.
+  // Otherwise, add previous version to the set without
+  // removing older versions.
+  lazy val mimaPreviousVersions = Set("0.5.0")
+  lazy val mimaSettings = Seq(
+    mimaPreviousArtifacts := mimaPreviousVersions.map { organization.value %% name.value % _ },
+    ThisBuild / mimaFailOnNoPrevious := false,
+    mimaBinaryIssueFilters ++= Seq(),
+    Test / test := {
+      mimaReportBinaryIssues.value
+      (Test / test).value
     }
   )
 }
