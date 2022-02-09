@@ -24,9 +24,6 @@ import bintray.BintrayKeys._
 import com.typesafe.sbt.site.SitePlugin.autoImport._
 import com.typesafe.sbt.SbtGit.GitKeys._
 
-// Scoverage
-import scoverage.ScoverageKeys._
-
 object BuildSettings {
 
   lazy val publishSettings = bintraySettings ++ Seq(
@@ -62,6 +59,10 @@ object BuildSettings {
   lazy val javaCompilerOptions = Seq("-source", "11", "-target", "11")
 
   lazy val coverageSettings = Seq(
-    coverageMinimum := 90
+    coverageMinimumStmtTotal := 90,
+    coverageFailOnMinimum    := false,
+    (Test / test) := {
+      (coverageReport dependsOn (Test / test)).value
+    }
   )
 }
