@@ -21,7 +21,6 @@ import bintray.BintrayPlugin._
 import bintray.BintrayKeys._
 
 // Scaladocs
-import sbtunidoc.ScalaUnidocPlugin.autoImport._
 import com.typesafe.sbt.site.SitePlugin.autoImport._
 import com.typesafe.sbt.SbtGit.GitKeys._
 
