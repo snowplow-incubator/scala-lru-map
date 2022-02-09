@@ -1,9 +1,9 @@
 # Scala LruMap
 
-[![Build Status](https://api.travis-ci.org/snowplow-incubator/scala-lru-map.svg)](https://travis-ci.org/snowplow-incubator/scala-lru-map)
-[![Maven Central](https://img.shields.io/maven-central/v/com.snowplowanalytics/scala-lru-map_2.12.svg)](https://maven-badges.herokuapp.com/maven-central/com.snowplowanalytics/scala-lru-map_2.12)
+[![Build Status][ci-image]][ci]
+[![Maven Central][release-image]][releases]
 [![codecov](https://codecov.io/gh/snowplow-incubator/scala-lru-map/branch/master/graph/badge.svg)](https://codecov.io/gh/snowplow-incubator/scala-lru-map)
-[![Join the chat at https://gitter.im/snowplow-incubator/scala-lru-map](https://badges.gitter.im/snowplow-incubator/scala-lru-map.svg)](https://gitter.im/snowplow-incubator/scala-lru-map?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+[![Join the chat at https://gitter.im/snowplow-incubator/scala-lru-map][chat-image]][chat]
 
 A pure least recently used map based on [`Scaffeine`][scaffeine].
 
@@ -86,3 +86,12 @@ limitations under the License.
 [cats-sync]: https://typelevel.org/cats-effect/docs/typeclasses/sync
 
 [license]: http://www.apache.org/licenses/LICENSE-2.0
+
+[ci]: https://github.com/snowplow-incubator/scala-lru-map/actions?query=workflow%3ACI
+[ci-image]: https://github.com/snowplow-incubator/scala-lru-map/workflows/CI/badge.svg
+
+[releases]: https://maven-badges.herokuapp.com/maven-central/com.snowplowanalytics/scala-lru-map_2.13
+[release-image]: https://img.shields.io/maven-central/v/com.snowplowanalytics/scala-lru-map_2.13.svg
+
+[chat]: https://gitter.im/snowplow-incubator/scala-lru-map?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge
+[chat-image]: https://badges.gitter.im/snowplow-incubator/scala-lru-map.svg

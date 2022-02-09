@@ -13,12 +13,11 @@
 import sbt._
 import Keys._
 
+// dynver plugin
+import sbtdynver.DynVerPlugin.autoImport._
+
 // Scoverage
 import scoverage.ScoverageKeys._
-
-// Bintray plugin
-import bintray.BintrayPlugin._
-import bintray.BintrayKeys._
 
 // Scaladocs
 import com.typesafe.sbt.site.SitePlugin.autoImport._
@@ -26,29 +25,21 @@ import com.typesafe.sbt.SbtGit.GitKeys._
 
 object BuildSettings {
 
-  lazy val publishSettings = bintraySettings ++ Seq(
-    publishMavenStyle       := true,
-    publishArtifact         := true,
-    publishArtifact in Test := false,
-    licenses += ("Apache-2.0", url("http://www.apache.org/licenses/LICENSE-2.0.html")),
-    bintrayOrganization  := Some("snowplow"),
-    bintrayRepository    := "snowplow-maven",
-    pomIncludeRepository := { _ => false },
-    homepage             := Some(url("https://github.com/snowplow-incubator/scala-lru-map")),
-    scmInfo := Some(
-      ScmInfo(
-        url("https://github.com/snowplow-incubator/scala-lru-map"),
-        "scm:git@github.com:snowplow-incubator/scala-lru-map.git"
+  lazy val publishSettings = Seq[Setting[_]](
+    publishArtifact        := true,
+    Test / publishArtifact := false,
+    pomIncludeRepository   := { _ => false },
+    homepage               := Some(url("http://snowplowanalytics.com")),
+    licenses               += ("Apache-2.0", url("http://www.apache.org/licenses/LICENSE-2.0.html")),
+    ThisBuild / dynverVTagPrefix := false, // Otherwise git tags required to have v-prefix
+    developers := List(
+      Developer(
+        "Snowplow Analytics Ltd",
+        "Snowplow Analytics Ltd",
+        "support@snowplowanalytics.com",
+        url("https://snowplowanalytics.com")
       )
-    ),
-    pomExtra := (<developers>
-        <developer>
-          <name>Snowplow Analytics Ltd</name>
-          <email>support@snowplowanalytics.com</email>
-          <organization>Snowplow Analytics Ltd</organization>
-          <organizationUrl>http://snowplowanalytics.com</organizationUrl>
-        </developer>
-      </developers>)
+    )
   )
 
   lazy val docSettings = Seq(
