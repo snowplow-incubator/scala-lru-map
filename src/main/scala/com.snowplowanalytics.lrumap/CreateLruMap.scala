@@ -13,7 +13,7 @@
 package com.snowplowanalytics.lrumap
 
 import cats.Id
-import cats.effect.Async
+import cats.effect.Sync
 import cats.syntax.functor._
 import com.github.blemale.scaffeine.Scaffeine
 
@@ -55,7 +55,7 @@ object CreateLruMap {
   }
 
   /** Pure instance */
-  implicit def asyncInitCache[F[_], K, V](implicit F: Async[F]): CreateLruMap[F, K, V] =
+  implicit def syncInitCache[F[_], K, V](implicit F: Sync[F]): CreateLruMap[F, K, V] =
     new CreateLruMap[F, K, V] {
 
       def create(size: Int): F[LruMap[F, K, V]] =
