@@ -22,12 +22,9 @@ import com.typesafe.tools.mima.plugin.MimaKeys._
 // Scoverage
 import scoverage.ScoverageKeys._
 
-// GHPages plugin
-import com.typesafe.sbt.sbtghpages.GhpagesPlugin.autoImport._
-import com.typesafe.sbt.site.SitePlugin.autoImport.{makeSite, siteSubdirName}
-import com.typesafe.sbt.SbtGit.GitKeys.{gitBranch, gitRemoteRepo}
+// Site plugin
+import com.typesafe.sbt.site.SitePlugin.autoImport.siteSubdirName
 import com.typesafe.sbt.site.SiteScaladocPlugin.autoImport._
-import com.typesafe.sbt.site.preprocess.PreprocessPlugin.autoImport._
 
 object BuildSettings {
 
@@ -72,15 +69,7 @@ object BuildSettings {
     }
   )
 
-  lazy val ghPagesSettings = Seq(
-    ghpagesPushSite               := (ghpagesPushSite dependsOn makeSite).value,
-    ghpagesNoJekyll               := false,
-    gitRemoteRepo                 := "git@github.com:snowplow-incubator/scala-lru-map.git",
-    gitBranch                     := Some("gh-pages"),
+  lazy val docSettings = Seq(
     SiteScaladoc / siteSubdirName := s"${version.value}",
-    Preprocess / preprocessVars   := Map("VERSION" -> version.value),
-    ghpagesCleanSite / excludeFilter := new FileFilter {
-      def accept(f: File) = true
-    }
   )
 }
