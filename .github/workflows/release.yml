@@ -12,30 +12,19 @@ jobs:
     - uses: actions/checkout@v2
     - uses: coursier/cache-action@v6
 
-    - name: Deploy scala-lru-map to Maven Central
-      run: sbt ci-release
-      env:
-        PGP_PASSPHRASE: ${{ secrets.SONA_PGP_PASSPHRASE }}
-        PGP_SECRET: ${{ secrets.SONA_PGP_SECRET }}
-        SONATYPE_USERNAME: ${{ secrets.SONA_USER }}
-        SONATYPE_PASSWORD: ${{ secrets.SONA_PASS }}
+#    - name: Deploy scala-lru-map to Maven Central
+#      run: sbt ci-release
+#      env:
+#        PGP_PASSPHRASE: ${{ secrets.SONA_PGP_PASSPHRASE }}
+#        PGP_SECRET: ${{ secrets.SONA_PGP_SECRET }}
+#        SONATYPE_USERNAME: ${{ secrets.SONA_USER }}
+#        SONATYPE_PASSWORD: ${{ secrets.SONA_PASS }}
+
+    - name: Make site
+      run: sbt makeSite
 
     - name: Publish ScalaDoc
-      run: |
-        project_version=$(sbt version -Dsbt.log.noformat=true | perl -ne 'print "$1\n" if /info.*(\d+\.\d+\.\d+[^\r\n]*)/' | tail -n 1 | tr -d '\n')
-        if [[ "${{ github.ref }}" = "refs/tags/${project_version}" ]]
-        then
-          sbt makeSite
-          echo Publishing Scaladoc
-          git fetch
-          git checkout gh-pages
-          cp -r target/site/* .
-          git config user.name "GitHub Actions"
-          git config user.email "<>"
-          git add $project_version
-          git commit -m "Added Scaladoc for $project_version"
-          git push origin gh-pages
-        else
-          echo "${{ github.ref }} does not match project version $project_version => not publishing"
-          exit 1
-        fi
+      uses: JamesIves/github-pages-deploy-action@v4.2.5
+      with:
+        branch: gh-pages
+        folder: target/site

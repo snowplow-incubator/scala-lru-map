@@ -75,7 +75,7 @@ object BuildSettings {
   lazy val ghPagesSettings = Seq(
     ghpagesPushSite               := (ghpagesPushSite dependsOn makeSite).value,
     ghpagesNoJekyll               := false,
-    gitRemoteRepo                 := "git@github.com:snowplow-incubator/scala-lru-map.git",
+    gitRemoteRepo                 := "https://github.com/snowplow-incubator/scala-lru-map.git",
     gitBranch                     := Some("gh-pages"),
     SiteScaladoc / siteSubdirName := s"${version.value}",
     Preprocess / preprocessVars   := Map("VERSION" -> version.value),
