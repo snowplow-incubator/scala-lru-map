@@ -17,7 +17,7 @@ lazy val root = project
     name               := "scala-lru-map",
     description        := "Simple LRU Map for caching",
     scalaVersion       := "2.13.8",
-    crossScalaVersions := Seq("2.12.15", "2.13.8"),
+    crossScalaVersions := Seq("2.12.15", "2.13.8", "3.1.3"),
     javacOptions       := BuildSettings.javaCompilerOptions,
     libraryDependencies ++= Seq(
       Dependencies.cats,
