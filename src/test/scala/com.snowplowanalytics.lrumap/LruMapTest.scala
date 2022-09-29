@@ -32,7 +32,7 @@ class LruMapSpecification extends Properties("LruMap") {
   property("Fill lru") = Prop.forAll(Gen.choose(1, 10000)) { size =>
     val map: Id[LruMap[Id, Int, Int]] = CreateLruMap[Id, Int, Int].create(size)
     val result = map.flatMap[Option[Int]](m =>
-      (1 to size).toList.traverse(n => m.put(n, n)).productR(m.get(0))
+      (1 to size).toList.traverse[Id, Unit](n => m.put(n, n)).productR(m.get(0))
     )
     result.isEmpty
   }
@@ -55,8 +55,8 @@ class LruMapSpecification extends Properties("LruMap") {
 
   property("Evict lru") = Prop.forAll(Gen.choose(1, 1000)) { size =>
     val map: Id[LruMap[Id, Int, Int]] = CreateLruMap[Id, Int, Int].create(size)
-    val result = (1 until size).reverse.toList.traverse(i => map.put(i, i)).productR {
-      (1 until size).toList.traverse(i => map.get(i)).productR {
+    val result = (1 until size).reverse.toList.traverse[Id, Unit](i => map.put(i, i)).productR {
+      (1 until size).toList.traverse[Id, Option[Int]](i => map.get(i)).productR {
         map.put(-1, -1).productR { // 0 should be evicted
           map.get(0)
         }
