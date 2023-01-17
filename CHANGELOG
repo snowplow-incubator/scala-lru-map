@@ -1,3 +1,8 @@
+Version 0.6.1 (2023-01-17)
+--------------------------
+Update copyright text to 2023 (#55)
+Build and publish for scala 3 (#56)
+
 Version 0.6.0 (2022-02-21)
 --------------------------
 Remove gh-pages sbt plugin (#53)
